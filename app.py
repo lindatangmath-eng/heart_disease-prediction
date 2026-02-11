@@ -5,20 +5,27 @@ import pickle
 # =========================
 # 1. Load Trained Model
 # =========================
-# Initialize model as None
-model = None
+# We use a function with caching so the model doesn't reload every time you click a button
+@st.cache_resource
+def load_model():
+    try:
+        with open("heart_disease_pipeline.pkl", "rb") as file:
+            return pickle.load(file)
+    except FileNotFoundError:
+        return None
 
-try:
-    with open("heart_disease_pipeline.pkl", "rb") as file:
-         model = pickle.load(file)
-except FileNotFoundError:
-    st.error("Model file 'heart_disease_pipeline.pkl' not found. Please ensure the file is in the same folder.")
+model = load_model()
 
 # =========================
 # 2. Streamlit App UI
 # =========================
+st.set_page_config(page_title="Heart Disease Predictor", page_icon="❤️")
 st.title("❤️ UCI Heart Disease Prediction App")
 st.write("Enter patient clinical data to predict the risk of heart disease.")
+
+if model is None:
+    st.error("Error: 'heart_disease_pipeline.pkl' not found. Please upload it to your GitHub repository.")
+    st.stop()
 
 # Grouping inputs for better UI
 col1, col2 = st.columns(2)
@@ -67,14 +74,18 @@ input_data = pd.DataFrame([{
 # 4. Make Prediction
 # =========================
 if st.button("Predict"):
-    if model is not None:
-        prediction = model.predict(input_data)[0]
+    prediction = model.predict(input_data)[0]
+    # Check if model has predict_proba (most classifiers do)
+    if hasattr(model, "predict_proba"):
         probability = model.predict_proba(input_data)[0][1]
-
-        # Display the result
+        
         if prediction == 1:
             st.error(f"⚠️ Heart Disease Detected (Risk: {probability:.2%})")
         else:
             st.success(f"✅ No Heart Disease (Risk: {probability:.2%})")
     else:
-        st.warning("Cannot predict because the model file is missing.")
+        # If model doesn't support probability
+        if prediction == 1:
+            st.error("⚠️ Heart Disease Detected")
+        else:
+            st.success("✅ No Heart Disease")
