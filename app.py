@@ -5,12 +5,14 @@ import pickle
 # =========================
 # 1. Load Trained Model
 # =========================
-# Ensure the filename matches the one you saved in the previous step
+# Initialize model as None
+model = None
+
 try:
     with open("heart_disease_pipeline.pkl", "rb") as file:
-        model = pickle.load(file)
+         model = pickle.load(file)
 except FileNotFoundError:
-    st.error("Model file not found. Please run the training script first.")
+    st.error("Model file 'heart_disease_pipeline.pkl' not found. Please ensure the file is in the same folder.")
 
 # =========================
 # 2. Streamlit App UI
@@ -45,7 +47,6 @@ with col2:
 # =========================
 # 3. Create Input DataFrame
 # =========================
-# Column names MUST match the X_train columns exactly
 input_data = pd.DataFrame([{
     "age": age,
     "sex": sex,
@@ -64,13 +65,16 @@ input_data = pd.DataFrame([{
 
 # =========================
 # 4. Make Prediction
-# =========================streamlit run app.py
+# =========================
 if st.button("Predict"):
-    prediction = model.predict(input_data)[0]
-    probability = model.predict_proba(input_data)[0][1]
+    if model is not None:
+        prediction = model.predict(input_data)[0]
+        probability = model.predict_proba(input_data)[0][1]
 
-    # Display the result
-    if prediction == 1:
-        st.error(f"⚠️ Heart Disease Detected (Risk: {probability:.2%})")
+        # Display the result
+        if prediction == 1:
+            st.error(f"⚠️ Heart Disease Detected (Risk: {probability:.2%})")
+        else:
+            st.success(f"✅ No Heart Disease (Risk: {probability:.2%})")
     else:
-        st.success(f"✅ No Heart Disease (Risk: {probability:.2%})")
+        st.warning("Cannot predict because the model file is missing.")
