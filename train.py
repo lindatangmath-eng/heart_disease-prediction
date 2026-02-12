@@ -16,11 +16,16 @@ df = pd.read_csv("D:\\heart_disease-classification\\heart_disease.csv")
 # Preprocessing: Drop 'id' and 'dataset' as they aren't predictive features
 if 'id' in df.columns:
     df = df.drop(columns=['id'])
-if 'dataset' in df.columns:
-    df = df.drop(columns=['dataset'])
 
-# Drop missing values
-df = df.dropna()
+#impute numerical features with median
+missingnum_cols = ['trestbps', 'chol', 'thalch', 'oldpeak', 'ca']
+for col in missingnum_cols:
+    df[col] = df[col].fillna(df[col].median())
+
+#impute categorical features with mode
+missingcat_cols = ['fbs', 'restecg', 'exang', 'slope', 'thal']
+for col in missingcat_cols:
+   df[col] = df[col].fillna(df[col].mode()[0])
 
 # =========================
 # 2. Define Target
@@ -87,5 +92,6 @@ print("\nClassification Report:\n", classification_report(y_test, y_pred))
 # =========================
 with open("heart_disease_pipeline.pkl", "wb") as file:
     pickle.dump(pipeline, file)
+
 
 print("Model saved successfully as 'heart_disease_pipeline.pkl'!")
