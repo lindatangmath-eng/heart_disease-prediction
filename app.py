@@ -37,13 +37,13 @@ with col1:
                       ["typical angina", "asymptomatic", "non-anginal", "atypical angina"])
     trestbps = st.number_input("Resting Blood Pressure (mm Hg)", min_value=0, max_value=200, value=130)
     chol = st.number_input("Serum Cholestoral (mg/dl)", min_value=0, max_value=600, value=200)
-    fbs = st.selectbox("Fasting Blood Sugar > 120 mg/dl", [Yes, No])
+    fbs = st.selectbox("Fasting Blood Sugar > 120 mg/dl", ["Yes", "No"])
     restecg = st.selectbox("Resting Electrocardiographic Results", 
                            ["lv hypertrophy", "normal", "st-t wave abnormality"])
 
 with col2:
     thalch = st.number_input("Maximum Heart Rate Achieved (thalch)", min_value=60, max_value=220, value=150)
-    exang = st.selectbox("Exercise Induced Angina", [Yes, No])
+    exang = st.selectbox("Exercise Induced Angina", ["Yes", "No"])
     oldpeak = st.number_input("ST Depression Induced by Exercise", min_value=-3.0, max_value=7.0, value=1.0, step=0.1)
     slope = st.selectbox("Slope of the Peak Exercise ST Segment", 
                          ["downsloping", "flat", "upsloping"])
@@ -89,4 +89,5 @@ if st.button("Predict"):
             st.error("⚠️ Heart Disease Detected")
         else:
             st.success("✅ No Heart Disease")
+
 
