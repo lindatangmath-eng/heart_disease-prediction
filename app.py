@@ -20,7 +20,7 @@ model = load_model()
 # 2. Streamlit App UI
 # =========================
 st.set_page_config(page_title="Heart Disease Predictor", page_icon="❤️")
-st.title("❤️ UCI Heart Disease Prediction App")
+st.title("❤️ Heart Disease Prediction App")
 st.write("Enter patient clinical data to predict the risk of heart disease.")
 
 if model is None:
@@ -37,17 +37,17 @@ with col1:
                       ["typical angina", "asymptomatic", "non-anginal", "atypical angina"])
     trestbps = st.number_input("Resting Blood Pressure (mm Hg)", min_value=0, max_value=200, value=130)
     chol = st.number_input("Serum Cholestoral (mg/dl)", min_value=0, max_value=600, value=200)
-    fbs = st.selectbox("Fasting Blood Sugar > 120 mg/dl", [False, True])
+    fbs = st.selectbox("Fasting Blood Sugar > 120 mg/dl", [Yes, No])
     restecg = st.selectbox("Resting Electrocardiographic Results", 
                            ["lv hypertrophy", "normal", "st-t wave abnormality"])
 
 with col2:
     thalch = st.number_input("Maximum Heart Rate Achieved (thalch)", min_value=60, max_value=220, value=150)
-    exang = st.selectbox("Exercise Induced Angina", [False, True])
+    exang = st.selectbox("Exercise Induced Angina", [Yes, No])
     oldpeak = st.number_input("ST Depression Induced by Exercise", min_value=-3.0, max_value=7.0, value=1.0, step=0.1)
     slope = st.selectbox("Slope of the Peak Exercise ST Segment", 
                          ["downsloping", "flat", "upsloping"])
-    ca = st.selectbox("Number of Major Vessels (0-3)", [0.0, 1.0, 2.0, 3.0])
+    ca = st.selectbox("Number of Major Vessels (0-3)", [0, 1, 2, 3])
     thal = st.selectbox("Thalassemia", 
                         ["fixed defect", "normal", "reversable defect"])
 
@@ -89,3 +89,4 @@ if st.button("Predict"):
             st.error("⚠️ Heart Disease Detected")
         else:
             st.success("✅ No Heart Disease")
+
